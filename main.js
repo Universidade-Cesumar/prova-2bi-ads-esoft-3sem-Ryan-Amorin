@@ -4,7 +4,8 @@ const API_URL = 'https://6a289afc4e1e783349a5b4ab.mockapi.io/produtos';
 
 let listaProdutos = [];
 
-const limparTela = () => {
+const limparTela = () => 
+{
     document.getElementById('input-nome').value = '';
     document.getElementById('input-quantidade').value = '';
 };
@@ -24,7 +25,8 @@ const renderizarLista = () => {
     });
 };
 
-const carregarProdutos = async () => {
+const carregarProdutos = async () => 
+{
     try {
         const response = await fetch(API_URL);
         if (!response.ok) throw new Error(`Erro ao carregar: ${response.status}`);
@@ -37,7 +39,8 @@ const carregarProdutos = async () => {
     }
 };
 
-const cadastrarProduto = async () => {
+const cadastrarProduto = async () => 
+    {
     const nome = document.getElementById('input-nome').value.trim();
     const quantidade = document.getElementById('input-quantidade').value.trim();
 
@@ -49,7 +52,8 @@ const cadastrarProduto = async () => {
     const novoProduto = { nome, quantidade: Number(quantidade) };
 
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(API_URL, 
+        {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(novoProduto)
@@ -61,7 +65,8 @@ const cadastrarProduto = async () => {
         listaProdutos.push(produtoSalvo);
         renderizarLista();
         limparTela();
-    } catch (erro) {
+    } catch (erro) 
+    {
         console.error('Falha no POST:', erro);
         alert('Não foi possível cadastrar o produto.');
     }
