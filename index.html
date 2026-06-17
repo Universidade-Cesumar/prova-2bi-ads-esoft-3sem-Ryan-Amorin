@@ -24,20 +24,27 @@
         <label for="input-quantidade">Quantidade</label>
         <input id="input-quantidade" type="number">
     </div>
+    </div>
 
     <button id="btn-cadastrar" onclick="cadastrarProduto()">Cadastrar</button>
 
-        <table id="lista-materiais">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Produto</th>
-                    <th>Quantidade</th>
-                </tr>
-            </thead>
-            <tbody id="corpo-tabela">
-            </tbody>
-        </table>
+    <div id="baixa-estoque">
+        <label for="input-retirada">Quantidade a retirar</label>
+        <input id="input-retirada" type="number">
+    </div>
+
+    <table id="lista-materiais">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody id="corpo-tabela">
+        </tbody>
+    </table>
 </main>
     <script src='main.js' defer></script>
 </body>
