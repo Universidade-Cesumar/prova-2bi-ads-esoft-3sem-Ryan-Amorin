@@ -72,7 +72,8 @@ async function cadastrarProduto() {
     }
 }
 
-async function baixarProduto(id) {
+async function baixarProduto(id) 
+{
     var botao = document.querySelector('.btn-baixar[data-id="' + id + '"]');
     var input = botao.parentNode.querySelector('.input-retirada');
     var qtd = parseInt(input.value);
@@ -109,6 +110,28 @@ async function baixarProduto(id) {
     }
 }
 
+async function excluirProduto(id) 
+{
+    try 
+    {
+        var response = await fetch(API_URL + '/' + id, {
+            method: 'DELETE'
+    });
 
+        if (!response.ok) throw new Error('Erro ao excluir: ' + response.status);
+
+        var novaLista = [];
+        for (var i = 0; i < listaProdutos.length; i++) {
+            if (listaProdutos[i].id !== id) {
+                novaLista.push(listaProdutos[i]);
+            }
+        }
+        listaProdutos = novaLista;
+        renderizarLista();
+    } catch (erro) {
+        console.error('Falha no DELETE:', erro);
+        alert('Não foi possível excluir o produto.');
+    }
+}
 
 carregarProdutos();
