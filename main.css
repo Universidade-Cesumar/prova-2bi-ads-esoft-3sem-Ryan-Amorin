@@ -126,3 +126,42 @@ input:focus {
     cursor: pointer;
 }
 
+td button
+{
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.btn-baixar
+{
+    background-color: #27ae60;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-baixar:hover
+{
+    background-color: #219150;
+}
+
+.btn-excluir
+{
+    background-color: #ec3b27;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.btn-excluir:hover
+{
+    background-color: #c0392b;
+}
+
