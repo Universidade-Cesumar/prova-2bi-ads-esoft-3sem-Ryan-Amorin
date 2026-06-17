@@ -1,75 +1,114 @@
-'use strict';
+var API_URL = 'https://6a289afc4e1e783349a5b4ab.mockapi.io/produtos';
 
-const API_URL = 'https://6a289afc4e1e783349a5b4ab.mockapi.io/produtos';
+var listaProdutos = [];
 
-let listaProdutos = [];
+function validarRetirada(quantidadeEstoque, quantidadeRetirada) {
+    if (quantidadeRetirada <= 0) return false;
+    if (quantidadeRetirada > quantidadeEstoque) return false;
+    return true;
+}
 
-const limparTela = () => 
-{
+function limparTela() {
     document.getElementById('input-nome').value = '';
     document.getElementById('input-quantidade').value = '';
-};
+}
 
-const renderizarLista = () => {
-    const tbody = document.getElementById('corpo-tabela');
+function renderizarLista() {
+    var tbody = document.getElementById('corpo-tabela');
     tbody.innerHTML = '';
 
-    listaProdutos.forEach((produto, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${produto.nome}</td>
-            <td>${produto.quantidade}</td>
-        `;
+    for (var i = 0; i < listaProdutos.length; i++) {
+        var produto = listaProdutos[i];
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + (i + 1) + '</td>' +
+                       '<td>' + produto.nome + '</td>' +
+                       '<td>' + produto.quantidade + '</td>' +
+                       '<td><input type="number" class="input-retirada" min="0" value="0">' +
+                       '<button class="btn-baixar" data-id="' + produto.id + '" onclick="baixarProduto(\'' + produto.id + '\')">Baixar</button>' +
+                       '<button class="btn-excluir" data-id="' + produto.id + '" onclick="excluirProduto(\'' + produto.id + '\')">Excluir</button></td>';
         tbody.appendChild(tr);
-    });
-};
+    }
+}
 
-const carregarProdutos = async () => 
-{
+async function carregarProdutos() {
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error(`Erro ao carregar: ${response.status}`);
-
+        var response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Erro ao carregar: ' + response.status);
         listaProdutos = await response.json();
         renderizarLista();
     } catch (erro) {
         console.error('Falha no GET:', erro);
         alert('Não foi possível carregar os produtos.');
     }
-};
+}
 
-const cadastrarProduto = async () => 
-    {
-    const nome = document.getElementById('input-nome').value.trim();
-    const quantidade = document.getElementById('input-quantidade').value.trim();
+async function cadastrarProduto() {
+    var nome = document.getElementById('input-nome').value.trim();
+    var quantidade = document.getElementById('input-quantidade').value.trim();
 
     if (!nome || !quantidade) {
         alert('Preencha o nome e a quantidade antes de cadastrar.');
         return;
     }
 
-    const novoProduto = { nome, quantidade: Number(quantidade) };
+    var novoProduto = { nome: nome, quantidade: parseInt(quantidade) };
 
     try {
-        const response = await fetch(API_URL, 
-        {
+        var response = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(novoProduto)
         });
 
-        if (!response.ok) throw new Error(`Erro ao cadastrar: ${response.status}`);
+        if (!response.ok) throw new Error('Erro ao cadastrar: ' + response.status);
 
-        const produtoSalvo = await response.json();
+        var produtoSalvo = await response.json();
         listaProdutos.push(produtoSalvo);
         renderizarLista();
         limparTela();
-    } catch (erro) 
-    {
+    } catch (erro) {
         console.error('Falha no POST:', erro);
         alert('Não foi possível cadastrar o produto.');
     }
-};
+}
+
+async function baixarProduto(id) {
+    var botao = document.querySelector('.btn-baixar[data-id="' + id + '"]');
+    var input = botao.parentNode.querySelector('.input-retirada');
+    var qtd = parseInt(input.value);
+
+    var produto = null;
+    for (var i = 0; i < listaProdutos.length; i++) {
+        if (listaProdutos[i].id === id) {
+            produto = listaProdutos[i];
+            break;
+        }
+    }
+    if (!produto) return;
+
+    if (!validarRetirada(produto.quantidade, qtd)) {
+        alert('Quantidade inválida para retirada.');
+        return;
+    }
+
+    try {
+        var novaQtd = produto.quantidade - qtd;
+        var response = await fetch(API_URL + '/' + id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ quantidade: novaQtd })
+        });
+
+        if (!response.ok) throw new Error('Erro na baixa: ' + response.status);
+
+        produto.quantidade = novaQtd;
+        renderizarLista();
+    } catch (erro) {
+        console.error('Falha no PUT:', erro);
+        alert('Não foi possível dar baixa no produto.');
+    }
+}
+
+
 
 carregarProdutos();
