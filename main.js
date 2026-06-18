@@ -24,8 +24,8 @@ function renderizarLista() {
                        '<td>' + produto.nome + '</td>' +
                        '<td>' + produto.quantidade + '</td>' +
                        '<td><input type="number" class="input-retirada" min="0" value="0">' +
-                       '<button class="btn-baixar" data-id="' + produto.id + '" onclick="baixarProduto(\'' + produto.id + '\')">Baixar</button>' +
-                       '<button class="btn-excluir" data-id="' + produto.id + '" onclick="excluirProduto(\'' + produto.id + '\')">Excluir</button></td>';
+'<button class="btn-baixar" data-id="' + produto.id + '" onclick="baixarProduto(\'' + produto.id + '\')"><i class="bi bi-box-arrow-down"></i> Baixar</button>' +
+'<button class="btn-excluir" data-id="' + produto.id + '" onclick="excluirProduto(\'' + produto.id + '\')"><i class="bi bi-trash"></i> Excluir</button></td>';
         tbody.appendChild(tr);
     }
 }
@@ -121,8 +121,10 @@ async function excluirProduto(id)
         if (!response.ok) throw new Error('Erro ao excluir: ' + response.status);
 
         var novaLista = [];
-        for (var i = 0; i < listaProdutos.length; i++) {
-            if (listaProdutos[i].id !== id) {
+        for (var i = 0; i < listaProdutos.length; i++) 
+            {
+            if (listaProdutos[i].id !== id) 
+                {
                 novaLista.push(listaProdutos[i]);
             }
         }
