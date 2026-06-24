@@ -20,6 +20,9 @@ function renderizarLista() {
     for (var i = 0; i < listaProdutos.length; i++) {
         var produto = listaProdutos[i];
         var tr = document.createElement('tr');
+        if (produto.quantidade < 10) {
+            tr.classList.add('estoque-critico');
+        }
         tr.innerHTML = '<td>' + (i + 1) + '</td>' +
                        '<td>' + produto.nome + '</td>' +
                        '<td>' + produto.quantidade + '</td>' +
@@ -28,6 +31,7 @@ function renderizarLista() {
 '<button class="btn-excluir" data-id="' + produto.id + '" onclick="excluirProduto(\'' + produto.id + '\')"><i class="bi bi-trash"></i> Excluir</button></td>';
         tbody.appendChild(tr);
     }
+    document.getElementById('total-itens').textContent = listaProdutos.length;
 }
 
 async function carregarProdutos() {
@@ -134,6 +138,22 @@ async function excluirProduto(id)
         console.error('Falha no DELETE:', erro);
         alert('Não foi possível excluir o produto.');
     }
+}
+
+async function buscarProduto() {
+    var termoBusca = document.getElementById('input-busca').value.trim().toLowerCase();
+    if (!termoBusca) {
+        document.getElementById('total-itens').textContent = listaProdutos.length;
+        renderizarLista();
+        return;
+    }
+
+    var produtosFiltrados = listaProdutos.filter(function(produto) {
+        return produto.nome.toLowerCase().includes(termoBusca);
+    });
+
+    document.getElementById('total-itens').textContent = produtosFiltrados.length;
+
 }
 
 carregarProdutos();
