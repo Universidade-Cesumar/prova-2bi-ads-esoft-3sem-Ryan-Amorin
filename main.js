@@ -154,6 +154,25 @@ async function buscarProduto() {
 
     document.getElementById('total-itens').textContent = produtosFiltrados.length;
 
+    var tbody = document.getElementById('corpo-tabela');
+    tbody.innerHTML = '';
+
+    for (var i = 0; i < produtosFiltrados.length; i++) {
+        var produto = produtosFiltrados[i];
+        var tr = document.createElement('tr');
+        if (produto.quantidade < 10) {
+            tr.classList.add('estoque-critico');
+        }
+        tr.innerHTML = '<td>' + (i + 1) + '</td>' +
+                       '<td>' + produto.nome + '</td>' +
+                       '<td>' + produto.quantidade + '</td>' +
+                       '<td><input type="number" class="input-retirada" min="0" value="0">' +
+'<button class="btn-baixar" data-id="' + produto.id + '" onclick="baixarProduto(\'' + produto.id + '\')"><i class="bi bi-box-arrow-down"></i> Baixar</button>' +
+'<button class="btn-excluir" data-id="' + produto.id + '" onclick="excluirProduto(\'' + produto.id + '\')"><i class="bi bi-trash"></i> Excluir</button></td>';
+        tbody.appendChild(tr);
+    }
 }
+
+document.getElementById('input-busca').addEventListener('input', buscarProduto);
 
 carregarProdutos();
